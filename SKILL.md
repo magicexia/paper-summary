@@ -3,10 +3,19 @@ name: paper-summary
 description: >
   Academic paper summarization and analysis agent. Extracts text from PDF papers
   (local files, arXiv IDs/URLs, DOIs, Semantic Scholar URLs, PubMed IDs, or remote PDF URLs) 
-  using pymupdf4llm, then produces structured research summaries. Supports single and batch processing.
-  Use when user asks to: summarize a paper, analyze a research paper, read a PDF paper,
-  extract key findings from a paper, review literature, do a literature survey,
+  using pymupdf4llm, then produces structured research summaries.
+  
+  **Basic**: summarize a paper, analyze a research paper, read a PDF paper, extract key findings,
   总结论文, 分析文献, 论文解读, 文献综述.
+  
+  **Advanced (trigger these keywords)**:
+  - Compare/M对比: "compare papers", "对比论文", "多论文分析"
+  - Citations/引用: "citation network", "引用分析", "谁引用了这篇论文"
+  - Figures/图表: "extract figures", "提取图表", "图片提取"
+  - Related/推荐: "related papers", "类似论文", "推荐论文"
+  
+  Use when user asks to: summarize papers, compare papers, analyze citations, extract figures,
+  find related papers, do literature survey, 总结论文, 分析文献, 论文对比, 引用网络, 图表提取.
 ---
 
 # Paper Summary
@@ -30,9 +39,53 @@ Summarize academic papers into structured research reports.
 | PubMed ID | `PMID:12345678` or `12345678` |
 | Remote PDF URL | `https://example.com/paper.pdf` |
 
+## Natural Language Triggers
+
+The skill automatically routes to the appropriate function based on your request:
+
+### 📊 Compare Papers (多论文对比)
+
+**Trigger keywords**: "compare", "对比", "对比分析", "比较论文"
+**Examples**:
+- "对比这几篇论文的特点"
+- "Compare paper A and paper B"
+- "分析这三个论文的差异"
+
+**Command**: `python3 {skill_dir}/scripts/advanced_analysis.py compare <pdf1> <pdf2> ...`
+
+### 🔗 Citation Network (引用网络分析)
+
+**Trigger keywords**: "citation", "引用", "谁引用了", "参考文献"
+**Examples**:
+- "这篇论文被谁引用了？"
+- "分析论文的引用网络"
+- "show citations of this paper"
+
+**Command**: `python3 {skill_dir}/scripts/advanced_analysis.py citations <paper_id>`
+
+### 🖼️ Extract Figures (图表提取)
+
+**Trigger keywords**: "extract figure", "提取图表", "图片", "figures", "图表"
+**Examples**:
+- "提取论文中的图表"
+- "extract all figures from this PDF"
+- "保存论文里的图片"
+
+**Command**: `python3 {skill_dir}/scripts/advanced_analysis.py ocr <pdf>`
+
+### 🎯 Related Papers (相关论文推荐)
+
+**Trigger keywords**: "related", "类似", "推荐论文", "similar"
+**Examples**:
+- "推荐类似的论文"
+- "find related papers"
+- "有哪些论文和这个相关？"
+
+**Command**: `python3 {skill_dir}/scripts/advanced_analysis.py recommend <paper_id>`
+
 ## Basic Workflow
 
-### Single Paper
+### Single Paper Extraction
 
 ```bash
 python3 {skill_dir}/scripts/extract_paper.py "<input>" --metadata
@@ -44,83 +97,31 @@ python3 {skill_dir}/scripts/extract_paper.py "<input>" --metadata
 python3 {skill_dir}/scripts/batch_extract.py <pdf_directory> --summarize --concurrency 4
 ```
 
----
+## Advanced Features (Manual)
 
-## Advanced Features
+### Citation Network Analysis
 
-### 1. 📊 Multi-Paper Comparison (多论文对比)
+```bash
+python3 {skill_dir}/scripts/advanced_analysis.py citations 1706.03762
+```
 
-Compare multiple papers and generate comparison tables.
+### Multi-Paper Comparison
 
 ```bash
 python3 {skill_dir}/scripts/advanced_analysis.py compare paper1.pdf paper2.pdf paper3.pdf --output comparison.md
 ```
 
-**Output**: Markdown with comparison tables for:
-- Basic info (title, authors, pages)
-- Methods
-- Experimental results
-- Pros/Cons summary
-
----
-
-### 2. 🔗 Citation Network Analysis (引用网络分析)
-
-Analyze citations and references of a paper.
+### Figure/Table Extraction
 
 ```bash
-# Basic citation analysis
-python3 {skill_dir}/scripts/advanced_analysis.py citations 2301.07054
-
-# With output file
-python3 {skill_dir}/scripts/advanced_analysis.py citations 10.48550/arXiv.2301.07054 --output citations.md
-```
-
-**Output**: Markdown with:
-- Citation count, reference count
-- Reference list
-- Citing papers
-- Simple network visualization
-
----
-
-### 3. 🖼️ Figure/Table Extraction (图表提取)
-
-Extract images and tables from PDF.
-
-```bash
-# Extract to default directory
-python3 {skill_dir}/scripts/advanced_analysis.py ocr paper.pdf
-
-# Extract to custom directory
 python3 {skill_dir}/scripts/advanced_analysis.py ocr paper.pdf --output ./figures/
 ```
 
-**Output**:
-- Images saved as PNG/JPEG
-- Tables saved as Markdown
-- Index page with list
-
----
-
-### 4. 🎯 Related Paper Recommendation (相关论文推荐)
-
-Find related papers based on content.
+### Related Paper Recommendation
 
 ```bash
-# Find related papers
-python3 {skill_dir}/scripts/advanced_analysis.py recommend 2301.07054
-
-# With output
-python3 {skill_dir}/scripts/advanced_analysis.py recommend 10.48550/arXiv.2301.07054 --output recommendations.md
+python3 {skill_dir}/scripts/advanced_analysis.py recommend 1706.03762
 ```
-
-**Output**: Markdown with:
-- Paper recommendations
-- Quick search links
-- Related keywords
-
----
 
 ## All Options
 
